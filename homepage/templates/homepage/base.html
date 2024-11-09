@@ -1,0 +1,128 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en" data-bs-theme="dark">
+
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta charset="utf-8">
+    <!-- Bootstrap 5.3 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <!-- Extra CSS  -->
+    {% block extra_css %}{% endblock extra_css %}
+    <!-- Local  -->
+    <link rel="stylesheet" type="text/css" href="{% static 'css/main.css' %}">
+    <link rel="icon" href="{% static 'favicon/favicon.ico' %}">
+    <title>
+        {% block head_title %}{% endblock head_title %} - {{ SITE_NAME }}
+    </title>
+</head>
+
+<body>
+    <header>
+        {% if messages %}
+        {% for message in messages %}
+        <div class="container-fluid">
+            <div class="row justify-content-center">
+                <div class="col-md-6">
+                    <div class="alert alert-{{ message.tags }} mt-3 fixed-top alert-dismissible fade show" style="width: 80%; max-width: 400px; margin-left: auto; margin-right: auto;">
+                        {{ message }}
+                        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% endif %}
+        <nav class="navbar navbar-expand-lg navbar-dark bg-body-tertiary">
+            <!-- Alert messages display -->
+            <div class="container-fluid">
+                <a class="navbar-brand d-flex align-items-center" href="{% url 'home' %}">
+                    <img src="{% static 'favicon/favicon.ico' %}" alt="Logo" width="26" height="26" class="me-2">
+                    {{ SITE_NAME }}
+                </a>
+                
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
+                    aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                    
+                    <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                        {% if user.is_authenticated %}
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'chat' %}">Chat</a>
+                        </li>
+                        <!-- Context Files Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'context_files' %}">Context Files</a>
+                        </li>
+                        <!-- Quizzes Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'quizzes' %}">Quizzes</a>
+                        </li>
+                        <!-- Summaries Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'summaries' %}">Summaries</a>
+                        </li>
+                        <!-- Study Plans Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'plans' %}">Study Plans</a>
+                        </li>
+                        <!-- Token Usage Link -->
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'usage' %}">Token Usage</a>
+                        </li>
+                        
+                        {% endif %}
+                    </ul>
+                    <div class="navbar-nav ms-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'apis' %}">APIs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'api_keys' %}">API Keys</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'language_models' %}">Language Models</a>
+                        </li>
+                        {% if user.is_authenticated %}
+                            {% if user.is_superuser and user.is_staff %}
+                            <a class="btn  mx-1 btn-outline-info" href="/admin/">Admin</a>
+                            {% endif %}
+                            <a class="btn  mx-1 btn-outline-danger" href="{% url 'account_logout' %}">Sign Out</a>
+                        {% else %}
+                            <a class="btn  mx-1 btn-outline-success" href="{% url 'account_login' %}">Log In</a>
+                            <a class="btn  mx-1 btn-outline-warning" href="{% url 'account_signup' %}">Register</a>
+                        {% endif %}
+                    </div>
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main" class="container-fluid">
+        <div class="col">
+            <!-- Content display -->
+            <div class="mt-3">
+                {% block content %}{% endblock %}
+            </div>
+        </div>
+    </main>
+
+    <footer class="container p-1 fixed-bottom">
+        <div class="row align-items-center">
+        </div>
+    </footer>
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+        crossorigin="anonymous"></script>
+    
+    {% block extra_js %}{% endblock extra_js %}
+</body>
+
+</html>

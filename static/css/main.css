@@ -1,0 +1,136 @@
+.list-group-item.active {
+    --bs-list-group-active-bg: #203351;
+    --bs-list-group-active-border-color: #203351;
+}
+
+.chat-messages {
+    height: calc(100vh - 250px);
+}
+
+.main-panel {
+    height: calc(100vh - 90px);
+}
+
+
+.chat-list {
+    background-color: #1b1e21;
+    width: 350px;
+}
+
+.alert-width {
+    width: 20%;
+}
+
+.user-message {
+    background-color: rgb(22 26 31);
+}
+
+.assistant-message {
+    background-color: rgb(43, 48, 53);
+}
+
+/* Styling for the entire <pre> block */
+pre {
+    background-color: #2d2d2d;
+    /* Dark background */
+    color: #f8f8f2;
+    /* Default text color (light) */
+    padding: 10px;
+    border-radius: 5px;
+    overflow: auto;
+    font-family: "Courier New", Courier, monospace;
+    /* Monospace font for code */
+    line-height: 1.5;
+    /* Line spacing for readability */
+    white-space: pre-wrap;
+    /* Preserve line breaks and spaces */
+    border: 1px solid #444;
+}
+
+/* General reset for empty <span> */
+pre span {
+    display: inline;
+    /* Ensures spans don't break lines */
+}
+
+/* Comments (e.g., # comment) */
+pre .c1 {
+    color: #75715e;
+    /* Light brown/gray for comments */
+    font-style: italic;
+    /* Italicize comments */
+}
+
+/* Keywords (e.g., def, if, return, else) */
+pre .k {
+    color: #66d9ef;
+    /* Light blue for keywords */
+    font-weight: bold;
+    /* Bold keywords */
+}
+
+/* Function names (e.g., factorial) */
+pre .nf {
+    color: #a6e22e;
+    /* Green for function names */
+}
+
+/* Parameters, variables (e.g., n, number, result) */
+pre .n {
+    color: #f8f8f2;
+    /* White for variable names */
+}
+
+/* Parentheses and punctuation (e.g., (), :, ,) */
+pre .p {
+    color: #f8f8f2;
+    /* Default color for punctuation */
+}
+
+/* Numbers (e.g., 0, 1, 5) */
+pre .mi {
+    color: #ae81ff;
+    /* Light purple for numbers */
+}
+
+/* Operators (e.g., ==, *, -, =) */
+pre .o {
+    color: #f92672;
+    /* Pink for operators */
+}
+
+/* Logical operators (e.g., or, and) */
+pre .ow {
+    color: #f92672;
+    /* Pink for operators like 'or' and 'and' */
+    font-weight: bold;
+    /* Make logical operators bold */
+}
+
+/* Built-in function calls (e.g., print) */
+pre .nb {
+    color: #66d9ef;
+    /* Light blue for built-in functions */
+}
+
+/* f-strings (e.g., f"text {var}") */
+pre .sa {
+    color: #e6db74;
+    /* Yellow for f-string prefixes */
+}
+
+/* Strings (e.g., "text") */
+pre .s2 {
+    color: #e6db74;
+    /* Yellow for string literals */
+}
+
+/* Interpolated variables inside f-strings (e.g., {var}) */
+pre .si {
+    color: #ae81ff;
+    /* Light purple for interpolated variables */
+}
+
+a {
+    text-decoration: none;
+}

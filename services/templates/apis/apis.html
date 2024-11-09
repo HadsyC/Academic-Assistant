@@ -1,0 +1,78 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block head_title %}APIs{% endblock head_title %}
+
+{% block content %}
+<div class="container">
+    <h1>APIs</h1>
+    <p>Here is a list of all APIs available.</p>
+    <div class="d-flex justify-content-end">
+        <!-- Create Button trigger modal -->
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            Add API
+        </button>
+        <a href="{% url 'api_keys' %}" class="btn btn-primary mb-2 ms-2">API Keys</a>
+
+        <!-- Create Modal -->
+        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Add API</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form content for creating a new API -->
+                        <form method="POST" action="{% url 'create_api' %}">
+                            {% crispy register_api_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% if apis %}
+    {% render_table table %}
+    {% else %}
+    <p>No APIs found.</p>
+    {% endif %}
+    {% for api_form in api_forms %}
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal{{api_form.id}}" tabindex="-1" aria-labelledby="editModalLabel{{api_form.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel{{api_form.id}}">Edit API</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form content for editing the API -->
+                    <form method="POST" action="{% url 'update_api' api_form.id %}">
+                        {% crispy api_form.edit_form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal{{api_form.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{api_form.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{api_form.id}}">Delete API</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form content for deleting the API -->
+                    <form method='POST' action="{% url 'delete_api' api_form.id %}">
+                        {% crispy api_form.delete_form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

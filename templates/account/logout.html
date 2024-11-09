@@ -1,0 +1,25 @@
+{% extends 'homepage/base.html' %}
+{% load allauth i18n %}
+{% block head_title %}Log Out{% endblock head_title %}
+{% block content %}
+<div class="d-flex align-items-center  main-panel">
+    <div class = "col-md-3 mx-auto">
+        {% element h1 %}
+            {% trans "Log Out" %}
+        {% endelement %}
+        {% element p %}
+            {% trans 'Are you sure you want to log out?' %}
+        {% endelement %}
+        {% url 'account_logout' as action_url %}
+        {% element form method="post" action=action_url no_visible_fields=True %}
+            {% slot body %}
+                {% csrf_token %}
+                {{ redirect_field }}
+            {% endslot %}
+            {% slot actions %}
+                <button class="btn btn-primary" type="submit">{% trans "Log Out" %}</button>
+            {% endslot %}
+        {% endelement %}
+    </div>
+</div>
+{% endblock content %}

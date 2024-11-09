@@ -1,0 +1,72 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}API Keys{% endblock head_title %}
+
+{% block content %}
+<div class="container">
+    <h1>API Keys</h1>
+    <p>Here is a list of all your loaded API keys.</p>
+    <div class="d-flex justify-content-end">
+        <!-- Create Button trigger modal -->
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            Add API Key
+        </button>
+
+        <!-- Create Modal -->
+        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Add API Key</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form content for creating a new API Key -->
+                        <form method="POST" action="{% url 'create_api_key' %}">
+                            {% crispy form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for api_key in api_keys %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="card-title">{{ api_key.api.name }}</h5>
+            <p class="card-text">Key register date: {{api_key.created_at}}</p>
+            <div class="d-flex justify-content-end">
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{ api_key.id }}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% if not api_keys %}
+    <p>No API keys found.</p>
+    {% endif %}
+    <!-- Delete Modal -->
+
+    {% for api_key_form in api_key_forms %}
+    <div class="modal fade" id="deleteModal{{ api_key_form.id }}" tabindex="-1" aria-labelledby="deleteModalLabel{{ api_key_form.id }}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{ api_key_form.id }}">Delete API Key for {{api_key_form.delete_form.instance.api.name }}</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form method="POST" action="{% url 'delete_api_key' api_key_form.id %}">
+                        {% crispy api_key_form.delete_form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+
+</div>
+{% endblock content %}
+

@@ -1,0 +1,24 @@
+# Ignore virtual environment and IDE files
+.venv/
+.vscode/
+
+# Ignore local data and sample files
+data/
+file_samples/
+chat_files/
+
+# Ignore Django migration files (but keep __init__.py)
+*/migrations/*
+!*/migrations/__init__.py
+
+# Ignore uploaded media files
+mediafiles/
+
+# Ignore Python cache files
+__pycache__/
+*.pyc
+*.pyo
+
+# Ignore version control files
+.git/
+.gitignore

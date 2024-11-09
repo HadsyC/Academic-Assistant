@@ -1,0 +1,301 @@
+{% extends 'homepage/base.html' %}
+{% load allauth %}
+{% load crispy_forms_tags %}
+{% block head_title %}Chat{% endblock head_title %}
+
+
+{% block content %}
+<div class="d-flex main-panel">  <!-- Adjust the height based on your navbar -->
+    <div class="d-flex flex-column chat-list p-2 rounded" >
+        <div class="d-flex justify-content-end mb-2">
+            <a class="btn btn-sm btn-outline-primary" href="{% url "chat" "new" %}">
+                + New <i class="bi bi-chat"></i>
+            </a>
+        </div>
+        <div class="rounded list-group list-group-flush overflow-auto">
+            {% for chat in chats %}
+            <div class="p-2 list-group-item list-group-item-action lh-sm{% if current_chat.id == chat.id %} active{% endif %}" >
+                <div class="d-flex align-items-center justify-content-between">
+                    <a class="mb-1 text-decoration-none" href="{% url "chat" chat.id %}"><strong>{{chat.topic}}</strong></a>
+                    <small>{{ chat.created_at|date:"D" }}</small>
+                </div>
+                {% if chat.messages %}
+                    <div class="col-10 mb-1 small">
+                        {{ chat.messages.0.text|truncatewords:10 }}  <!-- Display the last message, truncated -->
+                    </div>
+                {% else %}
+                    <div class="col-10 mb-1 small">No messages yet.</div>  <!-- No messages case -->
+                {% endif %}
+                <div class="d-flex justify-content-end mt-2">
+                    <button type="button" class="btn btn-outline-info btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#systemPrompt-{{chat.id}}">
+                        <i class="bi bi-terminal-plus"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-success btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#parameters-{{chat.id}}">
+                        <i class="bi bi-sliders"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-warning btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#updateChat-{{chat.id}}">
+                        <i class="bi bi-pencil"></i>
+                    </button>
+                    <button type="button" class="btn btn-outline-danger btn-sm mx-2" data-bs-toggle="modal" data-bs-target="#deleteChat-{{chat.id}}">
+                        <i class="bi bi-trash"></i>
+                    </button>
+                </div>
+            </div>
+            
+            {% empty %}
+            <div class="list-group-item list-group-item-action py-3 lh-sm active">
+                <div class="d-flex align-items-center justify-content-between">
+                    <h1>
+                    <strong class="mb-1">Empty</strong>
+                    </h1>
+                </div>
+                <div class="col-10 mb-1 small">Create one chat to start!</div>
+            </div>
+            {% endfor %}
+        </div>
+        
+        {% for chat_form in chat_forms %}
+        <div class="modal fade" id="systemPrompt-{{chat_form.chat_id}}" tabindex="-1" aria-labelledby="systemPrompt-{{chat_form.chat_id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="systemPrompt-{{chat_form.chat_id}}Label">System Prompt</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method='POST' action="{% url 'update_system_prompt' chat_form.request_config_id %}">
+                            {% crispy chat_form.system_prompt_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="updateChat-{{chat_form.chat_id}}" tabindex="-1" aria-labelledby="updateChat-{{chat_form.chat_id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="updateChat-{{chat_form.chat_id}}Label">Rename Chat</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method='POST' action="{% url 'update_chat' chat_form.chat_id %}">
+                            {% crispy chat_form.update_chat_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="parameters-{{chat_form.chat_id}}" tabindex="-1" aria-labelledby="parameters-{{chat_form.chat_id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="parameters-{{chat_form.chat_id}}Label">Parameters</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method='POST' action="{% url 'update_params' chat_form.request_config_id %}">
+                            {% crispy chat_form.params_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="modal fade" id="deleteChat-{{chat_form.chat_id}}" tabindex="-1" aria-labelledby="deleteChat-{{chat_form.chat_id}}Label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="deleteChat-{{chat_form.chat_id}}Label">Delete Chat</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method='POST' action="{% url 'delete_chat' chat_form.chat_id %}">
+                            {% crispy chat_form.delete_chat_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    
+    <div class="flex-grow-1" > <!-- This will allow the tab section to grow and fill the remaining space -->
+        <ul class="nav nav-tabs" id="myTab" role="tablist">
+            <li class="nav-item" role="presentation">
+                <button class="nav-link active" id="chat-tab" data-bs-toggle="tab" data-bs-target="#chat-tab-pane" type="button" role="tab" aria-controls="chat-tab-pane" aria-selected="true">Chat</button>
+            </li>
+            <li class="nav-item" role="presentation">
+                <button class="nav-link" id="context-tab" data-bs-toggle="tab" data-bs-target="#context-tab-pane" type="button" role="tab" aria-controls="context-tab-pane" aria-selected="false">Context Files</button>
+            </li>
+
+        </ul>
+
+        <div class="tab-content flex-grow-1 p-3" id="myTabContent">
+            <div class="tab-pane fade show active" id="chat-tab-pane" role="tabpanel" aria-labelledby="chat-tab" tabindex="0">
+                <!-- Chat Component -->
+                <div class="d-flex flex-column">
+                    <div class="mb-3 text-center">
+                        {% if current_chat.get_last_message_sender == "assistant"%}
+                        <strong>Last Token Count:</strong> {{ current_chat.get_chat_token_count }} |
+                        <strong>Model Context Window:</strong> {{ current_chat.request_config.language_model.context_window }} |
+                        <strong>Context Window Usage:</strong> {{ current_chat.get_context_window_percentage }}
+                        
+                        <div style="display: inline-block; width: 100px; height: 10px; margin-left: 10px; background-color: #e0e0e0; border-radius: 5px; vertical-align: middle;">
+                            <div style="width: {{ current_chat.get_context_window_percentage_float }}%; height: 100%; background-color: #4caf50; border-radius: 5px;"></div>
+                        </div>
+                        {% elif current_chat.get_assistant_messages_count > 0 %}
+                        Loading...               
+                        {% endif %}                    
+                    </div>
+                    <div id="chatMessages" class="chat-messages overflow-auto rounded">
+                        <!-- Chat messages -->
+                        {% for message in chat_messages %}
+                        <div class="d-flex mb-3 {% if message.sender == "user" %} justify-content-end {% else %} justify-content-start {% endif %}">
+                            <div class="message p-3 rounded {% if message.sender == "user" %} user-message {% else %} assistant-message {% endif %}">
+                                <p {% if forloop.last and message.sender == "waiting" %}id="response"{% endif %}>
+                                    {% if message.sender == "user" %}
+                                        {{ message.text }}
+                                    {% else %}
+                                        {% if message.markdown %}
+                                            {{ message.markdown|safe }}
+                                        {% endif %}
+                                    {% endif %}
+                                </p>
+                                <small class="d-block text-muted">{{ message.created_at|date:"H:i" }}</small>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                    {% if current_chat %}
+                    <div class="d-flex align-items-start pt-2">
+                        <!-- File Upload Button -->
+                        <button type="button" class="btn btn-primary mx-2 flex-grow-0" data-bs-toggle="modal" data-bs-target="#file-upload-{{current_chat.id}}">
+                            📁
+                        </button>
+        
+                        <!-- Main Message Form with chat id-->
+                        <form method='POST' action="{% url 'send_message' current_chat.id %}" class="flex-grow-1">
+                            {% crispy message_form %}
+                        </form>
+                    </div>
+                    <div class="modal fade" id="file-upload-{{current_chat.id}}" tabindex="-1" aria-labelledby="file-upload-{{current_chat.id}}Label" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="file-upload-{{current_chat.id}}Label">Upload more files!</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method='POST' action="{% url 'add_file_to_chat' current_chat.id %}" enctype="multipart/form-data">
+                                        {% crispy file_upload_form %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% else %}
+                    <div class="d-flex align-items-start pt-2">
+                        <!-- File Upload Button -->
+                        <button type="button" class="btn btn-primary mx-2" data-bs-toggle="modal" data-bs-target="#file-upload-new-chat">
+                            📁
+                        </button>
+        
+                        <!-- Main Message Form without chat id-->
+                        <form method='POST' action="{% url 'send_message' %}" class="flex-grow-1">
+                            {% crispy message_form %}
+                        </form>
+                    </div>
+                    <div class="modal fade" id="file-upload-new-chat" tabindex="-1" aria-labelledby="file-upload-new-chatLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    <h1 class="modal-title fs-5" id="file-upload-new-chatLabel">Upload more files!</h1>
+                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                </div>
+                                <div class="modal-body">
+                                    <form method='POST' action="{% url 'add_file_to_chat' %}" enctype="multipart/form-data">
+                                        {% crispy file_upload_form %}
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+            <div class="tab-pane fade" id="context-tab-pane" role="tabpanel" aria-labelledby="context-tab" tabindex="0">
+                {% if context_files %}
+                <nav>
+                    <div class="nav nav-tabs" id="nav-tab" role="tablist">
+                        {% for context_file in context_files %}
+                        <button 
+                        class="nav-link{% if forloop.first %} active{% endif %}" 
+                        id="{{context_file.id}}-tab" 
+                        data-bs-toggle="tab" 
+                        data-bs-target="#{{context_file.id}}" 
+                        type="button" 
+                        role="tab" 
+                        aria-controls="{{context_file.id}}" 
+                        aria-selected="true"
+                        >
+                        {{ context_file.filename }}
+                        </button>
+                        {% endfor %}
+                    </div>
+                </nav>
+            
+                <div class="tab-content" id="nav-tabContent">
+                    {% for context_file in context_files %}
+                    <div class="tab-pane fade show {% if forloop.first %} active{% endif %}" id="{{context_file.id}}" role="tabpanel" aria-labelledby="{{context_file.id}}-tab" tabindex="0">
+                        <div class="container-fluid m-3">
+                            <div class="overflow-auto" style="height: calc(100vh - 270px);">
+                                {{context_file.html|safe}}
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <div class="d-flex align-items-center justify-content-center">
+                    <h3>No context files found.</h3>
+                {% endif %}
+        </div>
+        
+        </div>
+    </div>
+</div>
+{% endblock content %}
+
+{% block extra_js %}
+<script  src="https://code.jquery.com/jquery-3.7.0.js"  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="  crossorigin="anonymous"></script>
+<script>
+    function scrollToBottom() {
+        var chatMessages = document.getElementById("chatMessages");
+        chatMessages.scrollTop = chatMessages.scrollHeight;
+    }
+    window.onload = function() {
+        scrollToBottom();
+        document.getElementById('id_text').focus();
+    };
+</script>
+{% if generate_response %}
+<script type="text/javascript">
+    $(document).ready(function() {
+        const eventSource = new EventSource("{% url 'generate_stream' current_chat.id %}");
+        eventSource.onmessage = function(event) {
+            const data = JSON.parse(event.data);
+            console.log("Received data:", data); 
+            if (data.text) {
+                $("#response").html(data.text);
+                console.log("Response:", data.text);
+            } else {
+                console.error("Text field is empty or does not exist.");
+            }
+        };
+        eventSource.onerror = function(event) {
+            eventSource.close();
+            location.reload();
+        }
+    });
+</script>
+{% endif %}
+{% endblock extra_js %}

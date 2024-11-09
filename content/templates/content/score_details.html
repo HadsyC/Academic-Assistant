@@ -1,0 +1,43 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}Quiz{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col-md-12">
+            <h2>{{ score.quiz.topic }}</h2>
+            <p><strong>Score:</strong> {{ score.score }} / {{ score.get_total_points }} ({{ score.get_percent_score }})</p>
+            <p><strong>Time Elapsed:</strong> {{ score.time_elapsed }}</p>
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'quizz_details' score.quiz.id %}" class="btn btn-primary mb-2">
+                    <i class="bi bi-arrow-repeat"></i> Take the quiz again
+                </a>
+            </div>
+            <div class="card">
+                <div class="card-body">
+                    {% for answer in score.answers.all %}
+
+                        <div class="answer">
+                            <h4 class="{% if answer.is_correct %}text-success{% else %}text-danger{% endif %}">
+                                {% if answer.is_correct %}
+                                    <i class="bi bi-check"></i>
+                                {% else %}
+                                    <i class="bi bi-x"></i>
+                                {% endif %} 
+                                {{ answer.question.question }}
+                            </h4>
+                            <p><strong>Selected Answer:</strong> {{ answer.option }}</p>
+                            <p><strong>Explanation:</strong> {{ answer.explanation }}</p>
+                            {% if not answer.is_correct %}
+                                <p class="text-info"><strong>Correct Answer:</strong> {{ answer.get_correct_answer }}</p>
+                            {% endif %}
+                        </div>
+                    {% endfor %}
+                </div>
+            </div>
+
+            
+        </div>
+    </div>
+</div>
+{% endblock %}

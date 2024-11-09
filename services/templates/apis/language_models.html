@@ -1,0 +1,94 @@
+{% extends 'homepage/base.html' %}
+{% load allauth %}
+{% load crispy_forms_tags %}
+
+{% block head_title %}Language Models{% endblock head_title %}
+
+{% block content %}
+<div class="container">
+    <h1>Language Models</h1>
+    <p>Here is a list of all language models available</p>
+    <div class="d-flex justify-content-end">
+        <!-- Create Button trigger modal -->
+        <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createModal">
+            Create Language Model
+        </button>
+
+        <!-- Create Modal -->
+        <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="createModalLabel">Create Language Model</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <!-- Form content for creating a new language model -->
+                        <form method="POST" action="{% url 'create_language_model' %}">
+                            {% crispy register_language_model_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% for language_model in language_models %}
+    <div class="card mb-2">
+        <div class="card-body">
+            <h5 class="card-title mb-3">{{language_model.name}}</h5>
+            <h6 class="card-subtitle mb-2 text-muted">Context Window: <code>{{language_model.context_window}}</code></h6>
+            <h6 class="card-subtitle mb-2 text-muted">API Name: <code>{{language_model.api.name}}</code></h6>
+            <div class="d-flex justify-content-end">
+                <!-- Edit Button trigger modal -->
+                <button type="button" class="btn btn-warning me-2" data-bs-toggle="modal" data-bs-target="#editModal{{language_model.id}}">
+                    <i class="bi bi-pencil"></i>
+                </button>
+
+                <!-- Delete Button trigger modal -->
+                <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal{{language_model.id}}">
+                    <i class="bi bi-trash"></i>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+    {% for language_model_form in language_model_forms %}
+    <!-- Edit Modal -->
+    <div class="modal fade" id="editModal{{language_model_form.id}}" tabindex="-1" aria-labelledby="editModalLabel{{language_model_form.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel{{language_model_form.id}}">Edit Language Model</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form content for editing the language model -->
+                    <form method="POST" action="{% url 'update_language_model' language_model_form.id %}">
+                        {% crispy language_model_form.edit_form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Delete Modal -->
+    <div class="modal fade" id="deleteModal{{language_model_form.id}}" tabindex="-1" aria-labelledby="deleteModalLabel{{language_model_form.id}}" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteModalLabel{{language_model_form.id}}">Delete Language Model</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <!-- Form content for deleting the language model -->
+                    <form method="POST" action="{% url 'delete_language_model' language_model_form.id %}">
+                        {% crispy language_model_form.delete_form %}
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% endfor %}    
+</div>
+{% endblock content %}
+
+          

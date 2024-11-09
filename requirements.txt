@@ -1,0 +1,15 @@
+openai==1.51.0
+pymupdf4llm==0.0.17
+python-dotenv==1.0.1
+tiktoken==0.7.0
+crispy-bootstrap5==2024.10
+Django==5.1.1
+django-allauth==65.0.2    
+django-crispy-forms==2.3  
+django-tables2==2.7.0
+Markdown==3.7
+mistune==3.0.2
+Pygments==2.18.0
+python-dotenv==1.0.1
+cryptography==43.0.3
+django-glrm==1.1.3

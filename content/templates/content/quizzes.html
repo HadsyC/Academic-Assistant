@@ -1,0 +1,42 @@
+{% extends 'content/base_content.html' %}
+{% load crispy_forms_tags %}
+
+{% load render_table from django_tables2 %}
+{% block head_title %}Quizzes{% endblock %}
+
+{% block content_title%}Quizzes{% endblock content_title%}
+{% block content_description%}Create quizzes based on your files!{% endblock content_description%}
+{% block modal_button_text %}Create Quiz{% endblock modal_button_text %}
+{% block create_modal_title %}Create Quiz{% endblock create_modal_title %}
+{% block create_url %}{% url 'create_quizz' %}{% endblock create_url %}
+{% block create_form %}{% crispy create_quizz_form %}{% endblock create_form %}
+{% block list_content %}
+
+{% if quizzes %}
+{% render_table table %}
+{% else %}
+<p>No Quizzes found.</p>
+{% endif %}
+
+{% for delete_form in delete_forms %}
+<!-- Modal -->
+<div class="modal fade" id="delete-{{delete_form.instance.id}}" tabindex="-1" aria-labelledby="delete-{{delete_form.instance.id}}-label" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="delete-{{delete_form.instance.id}}-label">Delete Quizz</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <form method="POST" action="{% url 'delete_quizz' delete_form.instance.id %}" >
+                    {% crispy delete_form %}
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock list_content %}
+
+

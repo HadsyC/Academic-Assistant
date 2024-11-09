@@ -1,0 +1,16 @@
+{% extends 'homepage/base.html' %}
+{% block head_title %}Summary Details{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="d-flex justify-content-end">
+                <a href="{% url 'summaries' %}" class="btn btn-primary mb-2">Back to Summary List</a>
+            </div>
+
+            {{ summary.html|safe }}
+        </div>
+    </div>
+</div>
+{% endblock %}

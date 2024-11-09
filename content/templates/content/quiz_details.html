@@ -1,0 +1,33 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}Quiz{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>
+                <i class="bi bi-book"></i> {{ quiz.topic }}
+            </h1>
+            <h2>Start Time: {{ start_time|date:"H:i:s" }}</h2>
+            <div class="card mb-2">
+                <div class="card-body">
+                    <ol class="list-group list-group-numbered">
+
+                        <form method="post">
+                            {% for questions_form in questions_forms %}
+                            {% if questions_form.is_valid %}
+                                <div class="alert alert-success" role="alert">
+                                    {{ questions_form.get_correct_explanation }}
+                                </div>
+                            {% endif %}
+                            {% crispy questions_form %}
+                            {% endfor %}
+                            <div class="form-actions">
+                                <input type="hidden" name="start_time" value="{{ start_time|date:"Y-m-d H:i:s" }}">
+                                <input type="submit" name="submit" value="Submit Answers" class="btn btn-primary" id="submit-save">
+                            </div>
+                        </form>
+                    </ol>
+                </div>
+            </div>
+{% endblock %}

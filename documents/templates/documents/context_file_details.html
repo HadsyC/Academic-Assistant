@@ -1,0 +1,16 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block head_title %}Context Files{% endblock head_title %}
+
+{% block content %}
+<div class ="container">
+    <div class="row">
+        <div class="col">
+            {{context_file.html|safe}}
+        </div>
+    </div>
+</div>
+
+{% endblock content %}

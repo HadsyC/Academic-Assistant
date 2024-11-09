@@ -1,0 +1,60 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+
+{% block head_title %}Study Plans{% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Study Plans</h1>
+            <div class="d-flex justify-content-end">
+                <!-- Create Button trigger modal -->
+                <button type="button" class="btn btn-primary mb-2" data-bs-toggle="modal" data-bs-target="#createModal">
+                    Create Plan
+                </button>
+                <div class="modal fade" id="createModal" tabindex="-1" aria-labelledby="createModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h5 class="modal-title" id="createModalLabel">Create Plan</h5>
+                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                            </div>
+                            <div class="modal-body">
+                                <form method="POST" action="{% url 'create_plan' %}" enctype="multipart/form-data">
+                                    {% crispy create_form %}
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+        {% if plans %}
+        {% render_table table %}
+        {% else %}
+        <p>No Plans found.</p>
+        {% endif %}
+        </div>
+
+        {% for delete_form in delete_forms %}
+        <div class="modal fade" id="delete-{{delete_form.instance.id}}" tabindex="-1" aria-labelledby="delete-{{delete_form.instance.id}}-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete-{{delete_form.instance.id}}-label">Delete Quiz</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'delete_plan' delete_form.instance.id %}" >
+                            {% crispy delete_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}
+

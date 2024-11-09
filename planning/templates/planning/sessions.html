@@ -1,0 +1,35 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% load render_table from django_tables2 %}
+{% block head_title %}Study Plan {% endblock %}
+{% block content %}
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <h1>Plan goal: {{plan_goal}} </h1>
+            {% if sessions %}
+            {% render_table table %}
+            {% else %}
+            <p>No sessions found.</p>
+            {% endif %}
+        </div>
+        {% for delete_form in delete_forms %}
+        <div class="modal fade" id="delete-{{delete_form.instance.id}}" tabindex="-1" aria-labelledby="delete-{{delete_form.instance.id}}-label" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="delete-{{delete_form.instance.id}}-label">Delete Quiz</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form method="POST" action="{% url 'delete_session' delete_form.instance.id %}" >
+                            {% crispy delete_form %}
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

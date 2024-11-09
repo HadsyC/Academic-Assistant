@@ -1,0 +1,77 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% block head_title %}Academic Assistant - Homepage{% endblock head_title %}
+
+{% block content %}
+<div class="container">
+    <!-- Header Section -->
+    <header class="text-center my-4">
+        <h1>Welcome to Academic Assistant</h1>
+        <p>Your AI-powered tool to streamline academic tasks, from interactive chat to study planning.</p>
+    </header>
+
+    <!-- Features Section -->
+    <section id="features" class="my-5">
+        <h2>Key Features</h2>
+        <ul class="list-group">
+            <li class="list-group-item"><strong>Interactive Chat:</strong> Engage in academic discussions, get summaries, and ask questions about uploaded materials.</li>
+            <li class="list-group-item"><strong>Context Files:</strong> Easily upload and reference academic papers or notes within your chats.</li>
+            <li class="list-group-item"><strong>Quizzes and Summaries:</strong> Generate quizzes based on content files, or create summaries for a quick review.</li>
+            <li class="list-group-item"><strong>Study Plans:</strong> Develop structured, personalized study plans to achieve academic goals.</li>
+            <li class="list-group-item"><strong>Token Usage:</strong> Track your usage across different language models and plan efficiently.</li>
+        </ul>
+    </section>
+
+    <!-- Functionality Overview Section -->
+    <div class="card my-5">
+        <div class="card-header">
+            <h2>Functionality Overview</h2>
+        </div>
+        
+        <div class="card-body">
+            <p>Explore the various functionalities of Academic Assistant to enhance your academic experience.</p>
+        </div>
+        <!-- Chat Section -->
+        <div class="card-body">
+            <h3>Chat Function</h3>
+            <p>Use the chat interface to ask questions, engage with contextual content, and generate academic summaries or quizzes based on provided materials.</p>
+            <a href="{% url 'chat' %}" class="btn btn-primary">Go to Chat</a>
+        </div>
+
+        <!-- Context Files Section -->
+        <div class="card-body">
+            <h3>Context Files Management</h3>
+            <p>Upload or select existing files to use as context in chats. Track and manage multiple files to create a comprehensive academic toolkit.</p>
+            <a href="{% url 'context_files' %}" class="btn btn-primary">Manage Context Files</a>
+        </div>
+
+        <!-- Quizzes Section -->
+        <div class="card-body">
+            <h3>Quizzes</h3>
+            <p>Create quizzes from uploaded files or selected academic materials. Customize difficulty levels, question count, and other parameters for an effective study session.</p>
+            <a href="{% url 'quizzes' %}" class="btn btn-primary">Create and View Quizzes</a>
+        </div>
+
+        <!-- Summaries Section -->
+        <div class="card-body">
+            <h3>Summaries</h3>
+            <p>Generate concise summaries based on uploaded materials, formatted in markdown for easy readability and quick reference.</p>
+            <a href="{% url 'summaries' %}" class="btn btn-primary">Generate Summaries</a>
+        </div>
+
+        <!-- Study Plans Section -->
+        <div class="card-body">
+            <h3>Study Plans</h3>
+            <p>Plan and track your academic journey with personalized study plans. Define objectives, set milestones, and monitor your progress. Integrate quizzes, summaries, and context files into your study plan for a cohesive study experience.</p>
+            <a href="{% url 'plans' %}" class="btn btn-primary">Create a Study Plan</a>
+        </div>
+
+        <!-- Token Usage Section -->
+        <div class="card-body">
+            <h3>Token Usage</h3>
+            <p>Track your token usage across different language models to manage resources effectively. View detailed reports of tokens consumed in various interactions, ensuring efficient use of resources.</p>
+            <a href="{% url 'usage' %}" class="btn btn-primary">View Token Usage</a>
+        </div>
+    </div>
+</div>
+{% endblock content %}

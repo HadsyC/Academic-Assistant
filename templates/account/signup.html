@@ -1,0 +1,45 @@
+{% extends 'homepage/base.html' %}
+{% load crispy_forms_tags %}
+{% load allauth i18n %}
+{% block head_title %}Register{% endblock head_title %}
+{% block content %}
+<div class="d-flex align-items-center  main-panel">
+    <div class = "col-md-3 mx-auto">
+        {% element h1 %}
+        {% trans "Register" %}
+        {% endelement %}
+        {% setvar link %}
+        <a href="{{ login_url }}">
+            {% endsetvar %}
+            {% setvar end_link %}
+        </a>
+        {% endsetvar %}
+        {% element p %}
+        {% blocktranslate %}Already have an account? Then please {{ link }}log in{{ end_link }}.{% endblocktranslate %}
+        {% endelement %}
+        {% if not SOCIALACCOUNT_ONLY %}
+        {% url 'account_signup' as action_url %}
+        {% element form form=form method="post" action=action_url tags="entrance,signup" %}
+        {% slot body %}
+        {% csrf_token %}
+        {{ form|crispy }}
+        {{ redirect_field }}
+        {% endslot %}
+        {% slot actions %}
+        <button class="btn btn-primary" type="submit">{% trans "Register" %} </button>
+        {% endslot %}
+        {% endelement %}
+        {% endif %}
+        {% if PASSKEY_SIGNUP_ENABLED %}
+        {% element hr %}
+        {% endelement %}
+        {% element button href=signup_by_passkey_url tags="prominent,signup,outline,primary" %}
+        {% trans "Register using a passkey" %}
+        {% endelement %}
+        {% endif %}
+        {% if SOCIALACCOUNT_ENABLED %}
+        {% include "socialaccount/snippets/login.html" with page_layout="entrance" %}
+        {% endif %}
+    </div>
+</div>
+{% endblock content %}
